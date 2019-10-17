@@ -8,8 +8,6 @@ def harvest(url):
     client = Client(url, registry)
     client.ignoreBadCharacters(true_or_false=True)
 
-    n = 0
-
     identifiers = []
     for header in client.listIdentifiers(metadataPrefix='oai_dc'):
         identifiers.append(header.identifier())
