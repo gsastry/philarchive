@@ -1,5 +1,5 @@
 # philarchive
-philarchive data
+This repo contains instructions to download ~30k philosophy papers via https://philarchive.org/help/oai.html.
 
 # Installation
 
