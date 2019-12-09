@@ -1,5 +1,5 @@
 # philarchive
-philarchive data
+This repo contains instructions to download ~30k philosophy papers via https://philarchive.org/help/oai.html.
 
 # Installation
 
@@ -8,6 +8,7 @@ philarchive data
 3. Shuffle your identifiers, e.g. `sort -R philarchive.txt > philarchive_shuffled.txt`
 4. Run `python download.py` to download the raw files based on the identifiers. (this shuffling can happen after the raw files are downloaded as file)
 5. Run `python textify.py` to convert the pdfs and docs to text. (you will probably have to lightly edit this to work correctly)
+6. Run `ftfy` to remove mojibake from the text.
 
 # More details
 
