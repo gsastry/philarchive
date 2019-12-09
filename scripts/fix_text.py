@@ -43,10 +43,12 @@ def fix_text(filepath, output_path):
         fixed_text = '\n'.join([ ' '.join(s.split()) for s in raw_text.splitlines() ])
         # 4. Remove mujibake
         fixed_text = ftfy.fix_text(fixed_text)
-        fixed_data.append({ 'metadata': js_obj['metadata'], 'text': fixed_text })
+        # 5. Remove empty entries
+        if fixed_text.strip():
+            fixed_data.append({ 'metadata': js_obj['metadata'], 'text': fixed_text })
     dump_jsonl(fixed_data, output_path)
 
 if __name__ == "__main__":
-    input_path = os.path.expanduser('~/data/philarchive/philarchive_pdfs_docs.jsonl')
-    output_path = os.path.expanduser('~/data/philarchive/philarchive_pdfs_docs_fixed_v4.jsonl')
+    input_path = os.path.expanduser('~/data/philarchive/philarchive_pdfs_docs_fixed_v4.jsonl')
+    output_path = os.path.expanduser('~/data/philarchive/philarchive_pdfs_docs_fixed_v5.jsonl')
     fix_text(input_path, output_path)

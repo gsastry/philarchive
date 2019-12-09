@@ -21,7 +21,7 @@ def check_json(filepath):
     return True
 
 if __name__ == "__main__":
-    filepath = os.path.expanduser('~/data/philarchive/philarchive_pdfs_docs_fixed_v3.jsonl')
+    filepath = os.path.expanduser('~/data/philarchive/philarchive_pdfs_docs_fixed_v5.jsonl')
     # check_encoding(filepath)
     check_json(filepath)
 
