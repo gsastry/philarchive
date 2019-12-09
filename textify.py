@@ -1,3 +1,4 @@
+import docx
 import json
 import glob
 import os
@@ -17,9 +18,7 @@ from pdfminer.pdfpage import PDFPage
 from pdfminer.converter import XMLConverter, HTMLConverter, TextConverter
 
 DIRNAME = os.path.dirname(__file__)
-DATA_DIR = os.path.join(DIRNAME, "data")
-UNTAGGED_DIR = os.path.join(DATA_DIR, "untagged")
-TAGGED_DIR = os.path.join(DATA_DIR, "tagged")
+DATA_DIR = os.path.expanduser('~/data/philarchive/raw')
 
 def dump_jsonl(data, output_path, append=False):
     """
@@ -53,6 +52,13 @@ def get_languages(data_path):
     languages_dict = { k : v/total * 100 for total in (sum(languages_dict.values()),) for k,v in languages_dict.items()}
     pprint.pprint(languages_dict) 
 
+def doc2text(filename):
+    doc = docx.Document(filename)
+    fullText = []
+    for para in doc.paragraphs:
+        fullText.append(para.text)
+    return '\n'.join(fullText)
+
 def textify(data_path): 
     documents = []
     for filepath in tqdm(glob.iglob(f"{data_path}/*.pdf")): 
@@ -60,9 +66,34 @@ def textify(data_path):
             try:
                 text = '\n\n'.join(pdftotext.PDF(f))
                 try:
-                    lang = detect(text)
-                    if lang == 'en':
-                        documents.append({ 'text': text })
+                    # lang = detect(text)
+                    # if lang == 'en':
+                    identifier = os.path.basename(filepath)
+                    documents.append({ 
+                        'metadata': {
+                            'id': identifier
+                        },
+                        'text': text 
+                    })
+                except Exception as e:
+                    print(e)
+            except Exception as e:
+                print(e)
+
+    for filepath in tqdm(glob.iglob(f"{data_path}/*.doc*")): 
+        with open(filepath, "rb") as f:
+            try:
+                text = doc2text(filepath)
+                try:
+                    # lang = detect(text)
+                    # if lang == 'en':
+                    identifier = os.path.basename(filepath)
+                    documents.append({ 
+                        'metadata': {
+                            'id': identifier
+                        },
+                        'text': text 
+                    })
                 except Exception as e:
                     print(e)
             except Exception as e:
@@ -70,5 +101,5 @@ def textify(data_path):
     return documents
         
 if __name__ == "__main__":
-    documents = textify(data_path=TAGGED_DIR)
-    dump_jsonl(documents, os.path.join(DATA_DIR, 'philarchive_pdfs_en.jsonl'))
+    documents = textify(data_path=DATA_DIR)
+    dump_jsonl(documents, os.path.expanduser('~/data/philarchive/philarchive_pdfs_docs.jsonl'))
